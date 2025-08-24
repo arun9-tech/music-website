@@ -1,0 +1,140 @@
+:root {
+    --primary: #6366F1;
+    --primary-rgb: 99, 102, 241;
+    --dark: #121212;
+    --darker: #000000;
+    --light-dark: #181818;
+    --lighter-dark: #282828;
+    --light-gray: #b3b3b3;
+    --gray: #535353;
+}
+body { background-color: var(--dark); color: white; font-family: 'Poppins', sans-serif; height: 100vh; overflow: hidden; }
+a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
+.card-title a:hover, .card-text a:hover span, .track-info .track-name a:hover, .track-info .track-artist a:hover { text-decoration: underline; color: white; }
+
+/* --- 1. SIDEBAR & OFFCANVAS --- */
+.sidebar { background-color: var(--darker); }
+
+/* MODIFIED: The flex-grow property is the specific fix */
+.offcanvas-body { 
+    padding: 12px;
+    flex-grow: 0; /* THIS IS THE FIX: It stops the body from stretching down */
+}
+
+.logo { display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 8px; flex-shrink: 0; }
+.logo img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+.logo span { font-weight: 700; font-size: 24px; }
+.sidebar-main-nav { background-color: var(--light-dark); border-radius: 8px; padding: 4px; flex-shrink: 0; }
+
+/* --- 2. SIDEBAR LINK STYLING --- */
+.sidebar .nav-link { color: var(--light-gray); font-weight: 600; padding: 12px 16px; border-radius: 4px; display: flex; align-items: center; gap: 16px; transition: all 0.3s ease-out; position: relative; }
+.sidebar .nav-link:hover { color: white; text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); }
+.sidebar .nav-link.active { color: white; background-color: rgba(var(--primary-rgb), 0.1); box-shadow: inset 3px 0 0 0 var(--primary); }
+.sidebar .nav-link i { font-size: 1.25rem; width: 24px; text-align: center; }
+
+/* --- 3. TOP NAVBAR --- */
+.top-navbar { background-color: rgba(18, 18, 18, 0.8); backdrop-filter: blur(20px); padding: 16px 32px; position: sticky; top: 0; z-index: 1000; display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; }
+.top-navbar .nav-actions { grid-column: 1; justify-self: start; }
+.top-navbar .search-bar { grid-column: 2; justify-self: center; }
+.top-navbar .btn.disabled { opacity: 0.5; cursor: not-allowed; }
+.search-bar { background-color: white; border-radius: 500px; padding: 8px 16px; width: 100%; max-width: 400px; }
+.search-bar input { border: none; outline: none; width: 100%; background: transparent; }
+
+/* --- 4. MAIN CONTENT & CARDS --- */
+.main-content { background: linear-gradient(rgba(40, 40, 40, 0.6) 0%, var(--dark) 40%); height: calc(100vh - 80px); overflow-y: auto; }
+.content-section { padding: 24px 32px; }
+.section-title { font-size: 24px; font-weight: 700; margin-bottom: 24px; }
+.card { background-color: var(--lighter-dark); border-radius: 6px; padding: 16px; border: none; position: relative; height: 100%; }
+.card-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5); }
+.card-title { font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-text { color: var(--light-gray); font-size: 14px; display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.artist-link { display: inline-flex; align-items: center; gap: 6px; vertical-align: middle; }
+.artist-link img { width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; object-fit: cover; }
+
+/* --- 5. BUTTON ANIMATIONS (GENERAL) --- */
+.top-navbar .btn { transition: transform 0.1s ease-out, box-shadow 0.1s ease-out; }
+.top-navbar .btn:not(.disabled):hover { transform: scale(1.05); }
+.top-navbar .btn:not(.disabled):active { transform: scale(0.95); transition-duration: 0.05s; }
+
+/* --- 6. PLAYER BAR --- */
+.player-bar { background-color: var(--light-dark); height: 80px; position: fixed; bottom: 0; width: 100%; border-top: 1px solid var(--gray); padding: 0 16px; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; z-index: 1020; }
+.now-playing { display: flex; justify-content: flex-start; min-width: 180px; }
+.track-info { display: flex; align-items: center; }
+.track-info img { width: 56px; height: 56px; margin-right: 12px; border-radius: 4px; }
+.track-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.track-artist { color: var(--light-gray); font-size: 12px; }
+.player-controls { display: flex; flex-direction: column; align-items: center; max-width: 722px; width: 100%; margin: 0 auto; }
+.control-buttons { display: flex; align-items: center; justify-content: center; gap: 1rem; }
+.progress-bar-container { display: flex; align-items: center; gap: 8px; width: 100%; }
+.progress-bar, .volume-bar { flex-grow: 1; height: 4px; background-color: var(--gray); border-radius: 2px; cursor: pointer; position: relative; }
+.progress, .volume-progress { height: 100%; background-color: var(--light-gray); border-radius: 2px; width: 0%; position: relative; }
+.progress-handle, .volume-handle { width: 12px; height: 12px; background-color: white; border-radius: 50%; position: absolute; right: 0; top: 50%; transform: translate(50%, -50%); opacity: 0; transition: opacity 0.2s ease; }
+.progress-bar-container:hover .progress, .volume-bar:hover .volume-progress { background-color: var(--primary); }
+.progress-bar-container:hover .progress-handle, .volume-bar:hover .volume-handle { opacity: 1; }
+.time { font-size: 11px; color: var(--light-gray); min-width: 40px; text-align: center; }
+.extra-controls { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; min-width: 180px; }
+.extra-controls .volume-bar { width: 100px; }
+
+/* --- 7. PLAY BUTTON & NOW PLAYING --- */
+.card.now-playing, .song-circle-item.now-playing { background-color: var(--gray); border: 1px solid var(--primary); }
+.card.now-playing .card-title a, .song-circle-item.now-playing h5 a { color: var(--primary); }
+.play-button { position: absolute; width: 50px; height: 50px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; color: black; opacity: 0; box-shadow: 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; border: none; }
+.card .play-button { right: 24px; bottom: 90px; }
+.song-circle-item:hover .play-button, .card:hover .play-button, .now-playing .play-button { opacity: 1; }
+
+/* --- 8. MOBILE RESPONSIVENESS --- */
+@media (max-width: 991.98px) { .sidebar.offcanvas-lg { background-color: var(--darker); } .main-content { height: calc(100vh - 80px); } #song-card-container { padding-bottom: 120px; } }
+@media (max-width: 768px) { .player-bar { height: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 16px; } .now-playing { width: 100%; justify-content: space-between; min-width: 0; } .track-info { width: 100%; gap: 12px; } .track-info > div { flex-grow: 1; min-width: 0; } .track-info .track-name, .track-info .track-artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .track-info #player-heart-icon-wrapper { flex-shrink: 0; } .player-controls { width: 100%; max-width: none; } .control-buttons { order: 1; } .progress-bar-container { order: 2; } .extra-controls { display: none; } .main-content { height: calc(100vh - 150px); } .top-navbar { display: flex; justify-content: space-between; padding: 12px 16px; } .top-navbar .search-bar { display: none !important; } .content-section { padding: 16px; } .header-logo { display: none; } }
+
+/* --- 9. FOOTER & TOP ARTISTS --- */
+.site-footer { margin-top: 48px; padding-bottom: 48px; border-top: 1px solid var(--lighter-dark); }
+.top-artists-container { display: flex; flex-wrap: wrap; gap: 24px; perspective: 1000px; }
+.artist-circle-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100px; text-align: center; }
+.artist-circle-item img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; }
+.artist-circle-item span { font-size: 14px; font-weight: 600; color: var(--light-gray); transition: color 0.2s ease; }
+.artist-circle-item:hover span { color: white; }
+
+/* --- 10. PLAYER SVG ICONS --- */
+.control-buttons button, .extra-controls button { background: none; border: none; padding: 0; color: var(--light-gray); transition: all 0.2s ease; }
+.control-buttons button:hover, .extra-controls button:hover { color: white; transform: scale(1.1); }
+.control-buttons svg, .extra-controls svg { width: 24px; height: 24px; }
+.control-buttons .play-pause svg { width: 40px; height: 40px; }
+#player-heart-icon-wrapper { cursor: pointer; transition: transform 0.2s ease; color: var(--light-gray); }
+#player-heart-icon-wrapper:hover { transform: scale(1.1); }
+#player-heart-icon-wrapper.liked { color: var(--primary); }
+#player-heart-icon-wrapper svg { width: 24px; height: 24px; }
+
+/* --- 11. HEADER LOGO --- */
+.header-logo { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 10px; }
+.header-logo img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+.header-logo span { font-size: 18px; font-weight: 600; }
+
+/* --- 12. HOME PAGE ROW STYLES --- */
+.language-section { margin-bottom: 32px; }
+.song-row-scrollable { display: flex; overflow-x: auto; overflow-y: hidden; gap: 24px; padding: 10px; margin: -10px; }
+.song-row-scrollable::-webkit-scrollbar { height: 8px; }
+.song-row-scrollable::-webkit-scrollbar-track { background: transparent; }
+.song-row-scrollable::-webkit-scrollbar-thumb { background: var(--gray); border-radius: 4px; }
+.song-row-scrollable::-webkit-scrollbar-thumb:hover { background: var(--light-gray); }
+
+.song-circle-item { width: 160px; flex-shrink: 0; position: relative; background-color: var(--lighter-dark); padding: 16px; border-radius: 6px; border: 1px solid transparent; }
+.song-circle-item img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 50%; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.song-circle-item h5 { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-circle-item p { font-size: 13px; color: var(--light-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0; }
+.song-circle-item .play-button { right: 24px; bottom: 95px; }
+
+/* --- 13. ANIMATIONS & 3D EFFECTS --- */
+.card, .song-circle-item, .artist-circle-item { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s ease, border-color 0.3s ease; }
+.card:hover, .song-circle-item:hover, .artist-circle-item:hover { background-color: var(--gray); transform: scale(1.03) perspective(1000px) rotateY(4deg) rotateX(2deg); box-shadow: 0 15px 30px rgba(0,0,0,0.6); }
+.play-button { transform: translateY(10px) scale(0.8); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.song-circle-item:hover .play-button, .card:hover .play-button, .now-playing .play-button { transform: translateY(0) scale(1); }
+.control-buttons button:active, .extra-controls button:active { transform: scale(0.92); transition-duration: 0.1s; }
+.control-buttons button:hover, .extra-controls button:hover { color: white; transform: scale(1.1) translateZ(5px); }
+
+/* --- 14. DROPDOWN STYLES --- */
+.sidebar .dropdown-menu { background-color: var(--lighter-dark); border: 1px solid var(--gray); box-shadow: 0 8px 16px rgba(0,0,0,0.5); padding: 8px; border-radius: 8px; }
+.sidebar .dropdown-item { color: var(--light-gray); font-weight: 600; padding: 10px 16px; border-radius: 4px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease-out; }
+.sidebar .dropdown-item:hover, .sidebar .dropdown-item:focus { color: white; background-color: var(--gray); }
+.sidebar .dropdown-item i { font-size: 1.1rem; width: 20px; text-align: center; }
+.dropdown-toggle::after { transition: transform 0.3s ease; }
+.dropdown-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
