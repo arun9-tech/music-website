@@ -14,13 +14,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 
 /* --- 1. SIDEBAR & OFFCANVAS --- */
 .sidebar { background-color: var(--darker); }
-
-/* MODIFIED: The flex-grow property is the specific fix */
-.offcanvas-body { 
-    padding: 12px;
-    flex-grow: 0; /* THIS IS THE FIX: It stops the body from stretching down */
-}
-
+.offcanvas-body { padding: 12px; flex-grow: 0; }
 .logo { display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 8px; flex-shrink: 0; }
 .logo img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
 .logo span { font-weight: 700; font-size: 24px; }
@@ -78,20 +72,75 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 /* --- 7. PLAY BUTTON & NOW PLAYING --- */
 .card.now-playing, .song-circle-item.now-playing { background-color: var(--gray); border: 1px solid var(--primary); }
 .card.now-playing .card-title a, .song-circle-item.now-playing h5 a { color: var(--primary); }
-.play-button { position: absolute; width: 50px; height: 50px; background-color: var(--primary); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; color: black; opacity: 0; box-shadow: 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; border: none; }
+.play-button { 
+    position: absolute; 
+    width: 50px; 
+    height: 50px; 
+    background-color: var(--primary); 
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 28px; 
+    color: black; 
+    opacity: 0;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4); 
+    cursor: pointer; 
+    border: none;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+}
 .card .play-button { right: 24px; bottom: 90px; }
-.song-circle-item:hover .play-button, .card:hover .play-button, .now-playing .play-button { opacity: 1; }
+.song-circle-item:hover .play-button, 
+.card:hover .play-button, 
+.now-playing .play-button { 
+    opacity: 1;
+    transform: translateY(0);
+}
 
 /* --- 8. MOBILE RESPONSIVENESS --- */
 @media (max-width: 991.98px) { .sidebar.offcanvas-lg { background-color: var(--darker); } .main-content { height: calc(100vh - 80px); } #song-card-container { padding-bottom: 120px; } }
-@media (max-width: 768px) { .player-bar { height: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 16px; } .now-playing { width: 100%; justify-content: space-between; min-width: 0; } .track-info { width: 100%; gap: 12px; } .track-info > div { flex-grow: 1; min-width: 0; } .track-info .track-name, .track-info .track-artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .track-info #player-heart-icon-wrapper { flex-shrink: 0; } .player-controls { width: 100%; max-width: none; } .control-buttons { order: 1; } .progress-bar-container { order: 2; } .extra-controls { display: none; } .main-content { height: calc(100vh - 150px); } .top-navbar { display: flex; justify-content: space-between; padding: 12px 16px; } .top-navbar .search-bar { display: none !important; } .content-section { padding: 16px; } .header-logo { display: none; } }
+@media (max-width: 768px) { 
+    .player-bar { height: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 16px; } 
+    .now-playing { width: 100%; justify-content: space-between; min-width: 0; } 
+    .track-info { width: 100%; gap: 12px; } 
+    .track-info > div { flex-grow: 1; min-width: 0; } 
+    .track-info .track-name, .track-info .track-artist { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } 
+    .track-info #player-heart-icon-wrapper { flex-shrink: 0; } 
+    .player-controls { width: 100%; max-width: none; } .control-buttons { order: 1; } 
+    .progress-bar-container { order: 2; } 
+    .extra-controls { display: none; } 
+    .main-content { height: calc(100vh - 150px); } 
+    
+    .top-navbar { display: flex; justify-content: space-between; padding: 12px 16px; } 
+    .top-navbar .search-bar { display: none !important; } 
+    .header-logo { display: none; }
+
+    .content-section { padding: 16px; }
+    .section-title { font-size: 20px; }
+}
 
 /* --- 9. FOOTER & TOP ARTISTS --- */
-.site-footer { margin-top: 48px; padding-bottom: 48px; border-top: 1px solid var(--lighter-dark); }
-.top-artists-container { display: flex; flex-wrap: wrap; gap: 24px; perspective: 1000px; }
-.artist-circle-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100px; text-align: center; }
-.artist-circle-item img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; }
-.artist-circle-item span { font-size: 14px; font-weight: 600; color: var(--light-gray); transition: color 0.2s ease; }
+.site-footer { margin-top: 48px; padding-bottom: 24px; border-top: 1px solid var(--lighter-dark); }
+.top-artists-container { display: flex; overflow-x: auto; gap: 24px; padding-bottom: 10px; flex-wrap: nowrap; }
+.top-artists-container::-webkit-scrollbar { display: none; }
+.artist-circle-item { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 8px; 
+    width: 120px; /* SIZE DECREASED */
+    text-align: center; 
+    flex-shrink: 0; 
+}
+.artist-circle-item img { 
+    width: 120px; /* SIZE DECREASED */
+    height: 120px; /* SIZE DECREASED */
+    border-radius: 50%; 
+    object-fit: cover; 
+    border: 2px solid transparent; 
+}
+.artist-circle-item span { font-size: 13px; font-weight: 600; color: var(--light-gray); transition: color 0.2s ease; }
 .artist-circle-item:hover span { color: white; }
 
 /* --- 10. PLAYER SVG ICONS --- */
@@ -109,7 +158,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .header-logo img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
 .header-logo span { font-size: 18px; font-weight: 600; }
 
-/* --- 12. HOME PAGE ROW STYLES --- */
+/* --- 12. HOME PAGE ROW STYLES (MODIFIED) --- */
 .language-section { margin-bottom: 32px; }
 .song-row-scrollable { display: flex; overflow-x: auto; overflow-y: hidden; gap: 24px; padding: 10px; margin: -10px; }
 .song-row-scrollable::-webkit-scrollbar { height: 8px; }
@@ -117,11 +166,22 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .song-row-scrollable::-webkit-scrollbar-thumb { background: var(--gray); border-radius: 4px; }
 .song-row-scrollable::-webkit-scrollbar-thumb:hover { background: var(--light-gray); }
 
-.song-circle-item { width: 160px; flex-shrink: 0; position: relative; background-color: var(--lighter-dark); padding: 16px; border-radius: 6px; border: 1px solid transparent; }
-.song-circle-item img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 50%; margin-bottom: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
-.song-circle-item h5 { font-size: 15px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.song-circle-item p { font-size: 13px; color: var(--light-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0; }
-.song-circle-item .play-button { right: 24px; bottom: 95px; }
+.song-circle-item { 
+    width: 140px; /* SIZE DECREASED */
+    flex-shrink: 0; 
+    position: relative; 
+    background-color: var(--lighter-dark); 
+    padding: 12px; /* SIZE DECREASED */
+    border-radius: 6px; 
+    border: 1px solid transparent; 
+}
+.song-circle-item img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 50%; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+.song-circle-item h5 { font-size: 14px; font-weight: 700; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.song-circle-item p { font-size: 12px; color: var(--light-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0; }
+.song-circle-item .play-button { 
+    right: 18px; /* Position Adjusted */
+    bottom: 85px; /* Position Adjusted */
+}
 
 /* --- 13. ANIMATIONS & 3D EFFECTS --- */
 .card, .song-circle-item, .artist-circle-item { transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), background-color 0.3s ease, border-color 0.3s ease; }
@@ -138,3 +198,11 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .sidebar .dropdown-item i { font-size: 1.1rem; width: 20px; text-align: center; }
 .dropdown-toggle::after { transition: transform 0.3s ease; }
 .dropdown-toggle[aria-expanded="true"]::after { transform: rotate(180deg); }
+
+/* --- 15. GRID CARD STYLES --- */
+.song-grid-card { padding: 10px; }
+.song-grid-card .card-img { margin-bottom: 10px; }
+.song-grid-card .card-title { font-size: 12px; margin-bottom: 4px; }
+.song-grid-card .card-text { font-size: 10px; }
+.song-grid-card .artist-link img { width: 16px; height: 16px; }
+.song-grid-card .play-button { right: 12px; bottom: 65px; width: 40px; height: 40px; font-size: 20px; }

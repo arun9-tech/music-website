@@ -24,11 +24,11 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
                 </div>
                 <div class="offcanvas-body">
-                    <!-- Main Navigation Group with Dropdown -->
                     <ul class="nav flex-column sidebar-main-nav">
-                        <li class="nav-item"><a class="nav-link active" href="#" id="menu-home"><i class="fas fa-home"></i> Home</a></li>
+                        <!-- Home button has been removed -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="menu-dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- THIS IS THE FIX: data-bs-strategy="fixed" is added -->
+                            <a class="nav-link dropdown-toggle" href="#" id="menu-dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-strategy="fixed" aria-expanded="false">
                                 <i class="fas fa-bars"></i> Menu
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="menu-dropdown-toggle">
@@ -37,7 +37,6 @@
                             </ul>
                         </li>
                     </ul>
-                    <!-- HR and Playlists DIV removed from here -->
                 </div>
             </div>
             
@@ -54,7 +53,7 @@
                         <input type="text" placeholder="What do you want to listen to?">
                     </div>
                     <a href="#" class="header-logo">
-                        <img src="img/35.jpg" alt="Harmony Logo">
+                        <img src="img/36.jpg" alt="Harmony Logo">
                         <span>Harmony</span>
                     </a>
                 </div>
