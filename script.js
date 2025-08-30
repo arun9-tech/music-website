@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const volumeUpIcon = document.getElementById("volume-up-icon");
     const volumeDownIcon = document.getElementById("volume-down-icon");
     const volumeMuteIcon = document.getElementById("volume-mute-icon");
+    const mobileSearchBtn = document.getElementById("mobile-search-btn");
+    const topNavbar = document.querySelector(".top-navbar");
 
     // --- API & DATA HANDLING ---
 
@@ -49,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Network response was not ok`);
             const data = await response.json();
-            // Return both mapped songs and the raw data for artist extraction
             return {
                 songs: mapApiDataToSongs(data.data?.results || []),
                 rawData: data.data?.results || []
@@ -175,10 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
         updateNowPlayingIndicator();
     }
     
+    // --- THIS FUNCTION IS CORRECTED ---
     function renderTopArtists(artists) {
         topArtistsContainer.innerHTML = '';
-        // UPDATED: Show 10 artists as requested
-        artists.slice(0, 10).forEach(artist => {
+        // Show up to 12 artists instead of 8
+        artists.slice(0, 12).forEach(artist => {
             let imageUrl = artist.image?.find(q => q.quality === '500x500')?.url || artist.image?.slice(-1)[0]?.url;
             if (imageUrl) {
                 const artistHTML = `
@@ -195,6 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateView(state, addToHistory = false) {
         const footer = document.querySelector('.site-footer');
         document.querySelectorAll(".sidebar .nav-link.active").forEach(link => link.classList.remove("active"));
+        topNavbar.classList.remove('search-active');
 
         if (state.view === "home") {
             contentTitle.style.display = 'none';
@@ -293,8 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const songItem = e.target.closest(".col[data-album-id]");
             if (!songItem) return;
             if (e.target.closest(".play-button")) {
-                let playlistToUse;
-                let songIdToFind;
+                let playlistToUse, songIdToFind;
                 if (songItem.dataset.playlistKey) {
                     const homeState = navigationHistory.find(s => s.view === 'home');
                     playlistToUse = homeState.languageSections[songItem.dataset.playlistKey].songs;
@@ -307,17 +309,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (indexToPlay >= 0) { currentPlaylist = playlistToUse; if (indexToPlay === currentSongIndex && isPlaying) { pauseAudio(); } else { loadSong(indexToPlay); playAudio(); } }
             } else {
                 const { albumId, albumName } = songItem.dataset;
-                if (albumId && albumName) {
-                    showAlbumSongs(albumId, albumName, true);
-                }
+                if (albumId && albumName) { showAlbumSongs(albumId, albumName, true); }
             }
         });
         
         topArtistsContainer.addEventListener('click', e => { const artistItem = e.target.closest('.artist-circle-item'); if (artistItem) { const { artistId, artistName } = artistItem.dataset; showArtistSongs(artistId, artistName, true); } });
+        mobileSearchBtn.addEventListener("click", () => { topNavbar.classList.add("search-active"); searchInput.focus(); });
         const sidebarElement = document.getElementById("sidebarMenu"); if (sidebarElement) { const offcanvas = new bootstrap.Offcanvas(sidebarElement); sidebarElement.addEventListener("click", e => { if (e.target.closest(".nav-link") || e.target.closest(".dropdown-item")) { offcanvas.hide(); } }); }
     }
     
-    // --- THIS IS THE RESTORED, STABLE LOGIC FOR ARTISTS ---
+    // --- THIS IS THE STABLE LOGIC FOR GETTING POPULAR ARTISTS ---
     function extractAndDisplayTopArtists(songDataArrays) {
         const artistMap = new Map();
         songDataArrays.forEach(category => {
@@ -360,7 +361,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateVolumeDisplay();
         showHomePage(true, initialData);
         
-        // Use the restored, reliable function to get and display artists
         extractAndDisplayTopArtists(songResults);
 
         const dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));

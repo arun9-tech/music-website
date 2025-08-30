@@ -25,9 +25,7 @@
                 </div>
                 <div class="offcanvas-body">
                     <ul class="nav flex-column sidebar-main-nav">
-                        <!-- Home button has been removed -->
                         <li class="nav-item dropdown">
-                            <!-- THIS IS THE FIX: data-bs-strategy="fixed" is added -->
                             <a class="nav-link dropdown-toggle" href="#" id="menu-dropdown-toggle" role="button" data-bs-toggle="dropdown" data-bs-strategy="fixed" aria-expanded="false">
                                 <i class="fas fa-bars"></i> Menu
                             </a>
@@ -43,15 +41,22 @@
             <!-- Main Content -->
             <div class="col-lg-10 main-content">
                 <div class="top-navbar align-items-center">
+                    <!-- NAV ACTIONS UPDATED FOR MOBILE SEARCH -->
                     <div class="nav-actions d-flex align-items-center gap-3">
-                        <button class="btn btn-dark rounded-circle d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
-                        <button class="btn btn-dark rounded-circle" id="back-btn" aria-label="Go Back"><i class="fas fa-chevron-left"></i></button>
-                        <button class="btn btn-dark rounded-circle" id="forward-btn" aria-label="Go Forward"><i class="fas fa-chevron-right"></i></button>
+                        <div class="d-flex align-items-center gap-3" id="main-nav-actions">
+                            <button class="btn btn-dark d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
+                            <button class="btn btn-dark" id="back-btn" aria-label="Go Back"><i class="fas fa-chevron-left"></i></button>
+                            <button class="btn btn-dark" id="forward-btn" aria-label="Go Forward"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <button class="btn btn-dark d-lg-none" id="mobile-search-btn" aria-label="Open Search"><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="search-bar d-flex align-items-center">
+
+                    <!-- SEARCH BAR UPDATED WITH AN ID -->
+                    <div class="search-bar d-flex align-items-center" id="search-bar-container">
                         <i class="fas fa-search text-dark me-2"></i>
                         <input type="text" placeholder="What do you want to listen to?">
                     </div>
+
                     <a href="#" class="header-logo">
                         <img src="img/36.jpg" alt="Harmony Logo">
                         <span>Harmony</span>
