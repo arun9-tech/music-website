@@ -74,64 +74,83 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .extra-controls .volume-bar { width: 100px; }
 
 /* --- 6. SONG & ARTIST CARDS --- */
-.song-circle-item, .artist-circle-item {
-    background-color: var(--light-dark); 
-    padding: 12px; /* UPDATED: Reduced from 16px */
+.song-circle-item {
+    background-color: var(--light-dark);
+    padding: 10px; /* UPDATED: Reduced further */
     border-radius: 8px;
-    height: 100%; 
-    cursor: pointer; 
+    height: 100%;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+.artist-circle-item {
+    background-color: var(--light-dark);
+    padding: 10px;
+    border-radius: 8px;
+    height: 100%;
+    cursor: pointer;
     position: relative;
     transition: background-color 0.3s ease;
 }
 .song-circle-item:hover, .artist-circle-item:hover { background-color: var(--lighter-dark); }
-.song-circle-item .image-container { position: relative; margin-bottom: 16px; } /* NEW WRAPPER for image and button */
+.song-circle-item .image-container { 
+    position: relative; 
+    margin-bottom: 12px; /* UPDATED: Reduced margin */
+}
 .song-circle-item img {
-    width: 100%; 
-    aspect-ratio: 1 / 1; 
-    object-fit: cover; 
-    border-radius: 6px; /* slightly less rounded */
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 6px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 .artist-circle-item img {
-    width: 140px; 
-    height: 140px; 
-    border-radius: 50%; 
+    width: 110px; /* UPDATED: Reduced size */
+    height: 110px; /* UPDATED: Reduced size */
+    border-radius: 50%;
     object-fit: cover;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 .song-circle-item h5, .song-circle-item p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.song-circle-item h5 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-.song-circle-item p { font-size: 13px; color: var(--light-gray); }
+.song-circle-item h5 { 
+    font-size: 14px; /* UPDATED: Reduced font size */
+    font-weight: 700; 
+    margin-bottom: 4px; 
+}
+.song-circle-item p { 
+    font-size: 12px; /* UPDATED: Reduced font size */
+    color: var(--light-gray); 
+}
 
 /* --- 7. NEW SPOTIFY-STYLE PLAY BUTTON --- */
 .play-button {
-    position: absolute; 
-    width: 44px; /* UPDATED: Reduced from 50px */
-    height: 44px; /* UPDATED: Reduced from 50px */
-    background-color: var(--primary); 
+    position: absolute;
+    width: 40px; /* UPDATED: Reduced size */
+    height: 40px; /* UPDATED: Reduced size */
+    background-color: var(--primary);
     border-radius: 50%;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    font-size: 24px; /* UPDATED: Reduced from 28px */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px; /* UPDATED: Reduced size */
     color: black;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.4); 
-    cursor: pointer; 
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4);
+    cursor: pointer;
     border: none;
     /* Positioning */
-    right: 12px; 
-    bottom: 12px;
+    right: 8px; /* Adjusted for new padding */
+    bottom: 8px; /* Adjusted for new padding */
     /* Animation */
-    opacity: 0; 
+    opacity: 0;
     transform: translateY(10px);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .song-circle-item:hover .play-button, .col.now-playing .play-button {
-    opacity: 1; 
+    opacity: 1;
     transform: translateY(0);
 }
 .play-button:hover {
-    transform: scale(1.1); 
+    transform: scale(1.1);
     box-shadow: 0 0 20px 5px rgba(var(--primary-rgb), 0.5);
 }
 .col.now-playing .song-circle-item { background-color: var(--lighter-dark); }
@@ -165,7 +184,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .site-footer { margin-top: 48px; border-top: 1px solid var(--lighter-dark); }
 .top-artists-container { display: flex; overflow-x: auto; gap: 24px; padding-bottom: 10px; flex-wrap: nowrap; }
 .top-artists-container::-webkit-scrollbar { display: none; }
-.artist-circle-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 140px; text-align: center; flex-shrink: 0; }
+.artist-circle-item { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 110px; text-align: center; flex-shrink: 0; }
 .artist-circle-item span { font-size: 13px; font-weight: 600; color: var(--light-gray); transition: color 0.2s ease; }
 .artist-circle-item:hover span { color: white; }
 
@@ -192,8 +211,8 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .language-section { margin-bottom: 32px; }
 .song-row-scrollable { display: flex; overflow-x: auto; overflow-y: hidden; gap: 24px; padding: 10px; margin: -10px; }
 .song-row-scrollable .col { 
-    flex: 0 0 160px; /* UPDATED: Reduced from 180px */
-    max-width: 160px; /* UPDATED: Reduced from 180px */
+    flex: 0 0 130px; /* UPDATED: Drastically reduced */
+    max-width: 130px; /* UPDATED: Drastically reduced */
     padding: 0; 
 }
 .song-row-scrollable::-webkit-scrollbar { height: 8px; }
