@@ -70,14 +70,17 @@
     
     <!-- PLAYER BAR -->
     <div class="player-bar">
-        <div class="now-playing">
+        <div class="now-playing" id="now-playing-clickable-area" role="button" title="Expand View">
             <div class="track-info">
-                <img src="img/1.jpg" alt="Now Playing">
-                <div>
-                    <div class="track-name"><a href="#">Harmony Radio</a></div>
-                    <div class="track-artist"><a href="#">Select a Song</a></div>
+                 <div class="track-cover-art">
+                    <img src="" alt="Now Playing">
+                    <i class="fas fa-music initial-icon"></i>
                 </div>
-                <div class="d-flex align-items-center ms-3 gap-3">
+                <div>
+                    <div class="track-name"><a href="#">Harmony</a></div>
+                    <div class="track-artist"><a href="#">Ready to play...</a></div>
+                </div>
+                <div class="d-flex align-items-center ms-3 gap-3 track-actions">
                     <div class="player-icon-wrapper" id="player-heart-icon-wrapper" title="Like">
                         <i class="far fa-heart"></i>
                         <i class="fas fa-heart" style="display: none;"></i>
@@ -87,12 +90,14 @@
         </div>
         <div class="player-controls">
             <div class="control-buttons">
-                <button aria-label="Previous Track"><i class="fas fa-step-backward"></i></button>
+                <button id="shuffle-btn" aria-label="Shuffle"><i class="fas fa-random"></i></button>
+                <button id="prev-btn" aria-label="Previous Track"><i class="fas fa-step-backward"></i></button>
                 <button class="play-pause" aria-label="Play or Pause">
                     <i id="play-icon" class="fas fa-play-circle"></i>
                     <i id="pause-icon" class="fas fa-pause-circle" style="display: none;"></i>
                 </button>
-                <button aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
+                <button id="next-btn" aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
+                <button id="repeat-btn" aria-label="Repeat"><i class="bi bi-repeat"></i></button>
             </div>
             <div class="progress-bar-container">
                 <span class="time current-time">0:00</span>
@@ -107,6 +112,41 @@
                 <i id="volume-mute-icon" class="fas fa-volume-mute" style="display: none;"></i>
             </button>
             <div class="volume-bar"><div class="volume-progress"><div class="volume-handle"></div></div></div>
+        </div>
+    </div>
+
+    <!-- NOW PLAYING MODAL (BIG VIEW) -->
+    <div class="modal fade" id="nowPlayingModal" tabindex="-1" aria-labelledby="nowPlayingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nowPlayingModalLabel">Now Playing</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modal-song-cover" src="img/1.jpg" alt="Current song cover">
+                    <h3 id="modal-song-title">Select a Song</h3>
+                    <p id="modal-song-artist">Harmony Radio</p>
+                    
+                    <div class="modal-player-controls">
+                        <div class="progress-bar-container" id="modal-progress-bar-container">
+                            <span class="time current-time" id="modal-current-time">0:00</span>
+                            <div class="progress-bar"><div class="progress"><div class="progress-handle"></div></div></div>
+                            <span class="time duration" id="modal-duration">0:00</span>
+                        </div>
+                        <div class="control-buttons">
+                            <button id="modal-shuffle-btn" aria-label="Shuffle"><i class="fas fa-random"></i></button>
+                            <button id="modal-prev-btn" aria-label="Previous Track"><i class="fas fa-step-backward"></i></button>
+                            <button class="play-pause" id="modal-play-pause-btn" aria-label="Play or Pause">
+                                <i id="modal-play-icon" class="fas fa-play-circle"></i>
+                                <i id="modal-pause-icon" class="fas fa-pause-circle" style="display: none;"></i>
+                            </button>
+                            <button id="modal-next-btn" aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
+                            <button id="modal-repeat-btn" aria-label="Repeat"><i class="bi bi-repeat"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
