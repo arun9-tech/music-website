@@ -135,7 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- RENDERING ---
     function renderCards(songArray) {
-        songCardContainer.className = 'row g-3 row-cols-2 row-cols-md-3 row-cols-lg-6 grid-view';
+        // UPDATED: Changed column classes for smaller cards on medium/large screens
+        songCardContainer.className = 'row g-3 row-cols-2 row-cols-md-4 row-cols-lg-7 grid-view';
         if (songArray.length === 0) {
             songCardContainer.innerHTML = `<p class="text-center text-muted fs-5 mt-4">No songs found in this collection.</p>`;
             return;

@@ -75,18 +75,28 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 
 /* --- 6. SONG & ARTIST CARDS --- */
 .song-circle-item, .artist-circle-item {
-    background-color: var(--light-dark); padding: 16px; border-radius: 8px;
-    height: 100%; cursor: pointer; position: relative;
+    background-color: var(--light-dark); 
+    padding: 12px; /* UPDATED: Reduced from 16px */
+    border-radius: 8px;
+    height: 100%; 
+    cursor: pointer; 
+    position: relative;
     transition: background-color 0.3s ease;
 }
 .song-circle-item:hover, .artist-circle-item:hover { background-color: var(--lighter-dark); }
 .song-circle-item .image-container { position: relative; margin-bottom: 16px; } /* NEW WRAPPER for image and button */
 .song-circle-item img {
-    width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 6px; /* slightly less rounded */
+    width: 100%; 
+    aspect-ratio: 1 / 1; 
+    object-fit: cover; 
+    border-radius: 6px; /* slightly less rounded */
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 .artist-circle-item img {
-    width: 140px; height: 140px; border-radius: 50%; object-fit: cover;
+    width: 140px; 
+    height: 140px; 
+    border-radius: 50%; 
+    object-fit: cover;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 .song-circle-item h5, .song-circle-item p { margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -95,20 +105,34 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 
 /* --- 7. NEW SPOTIFY-STYLE PLAY BUTTON --- */
 .play-button {
-    position: absolute; width: 50px; height: 50px; background-color: var(--primary); border-radius: 50%;
-    display: flex; justify-content: center; align-items: center; font-size: 28px; color: black;
-    box-shadow: 0 8px 15px rgba(0,0,0,0.4); cursor: pointer; border: none;
+    position: absolute; 
+    width: 44px; /* UPDATED: Reduced from 50px */
+    height: 44px; /* UPDATED: Reduced from 50px */
+    background-color: var(--primary); 
+    border-radius: 50%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 24px; /* UPDATED: Reduced from 28px */
+    color: black;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.4); 
+    cursor: pointer; 
+    border: none;
     /* Positioning */
-    right: 12px; bottom: 12px;
+    right: 12px; 
+    bottom: 12px;
     /* Animation */
-    opacity: 0; transform: translateY(10px);
+    opacity: 0; 
+    transform: translateY(10px);
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .song-circle-item:hover .play-button, .col.now-playing .play-button {
-    opacity: 1; transform: translateY(0);
+    opacity: 1; 
+    transform: translateY(0);
 }
 .play-button:hover {
-    transform: scale(1.1); box-shadow: 0 0 20px 5px rgba(var(--primary-rgb), 0.5);
+    transform: scale(1.1); 
+    box-shadow: 0 0 20px 5px rgba(var(--primary-rgb), 0.5);
 }
 .col.now-playing .song-circle-item { background-color: var(--lighter-dark); }
 .col.now-playing h5 a { color: var(--primary); }
@@ -167,7 +191,11 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 /* --- 12. HOME PAGE ROW STYLES --- */
 .language-section { margin-bottom: 32px; }
 .song-row-scrollable { display: flex; overflow-x: auto; overflow-y: hidden; gap: 24px; padding: 10px; margin: -10px; }
-.song-row-scrollable .col { flex: 0 0 180px; max-width: 180px; padding: 0; }
+.song-row-scrollable .col { 
+    flex: 0 0 160px; /* UPDATED: Reduced from 180px */
+    max-width: 160px; /* UPDATED: Reduced from 180px */
+    padding: 0; 
+}
 .song-row-scrollable::-webkit-scrollbar { height: 8px; }
 .song-row-scrollable::-webkit-scrollbar-track { background: transparent; }
 .song-row-scrollable::-webkit-scrollbar-thumb { background: var(--gray); border-radius: 4px; }
