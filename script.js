@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return apiSongs.map(song => {
             let artistName = song.artists?.primary?.map(artist => artist.name).join(', ') || "Unknown Artist";
             let songTitle = song.name?.replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&#039;/g, "'") || "Untitled Track";
-            let coverUrl = song.image?.find(q => q.quality === '500x500')?.url || song.image?.slice(-1)[0]?.url;
+            let coverUrl = song.image?.slice(-1)[0]?.url || song.image?.find(q => q.quality === '500x500')?.url;
             let audioUrl = song.downloadUrl?.find(q => q.quality === '320kbps')?.url || song.downloadUrl?.slice(-1)[0]?.url;
             let albumId = song.album?.id || null;
             let albumName = song.album?.name?.replace(/&quot;/g, '"') || null;
@@ -143,13 +143,10 @@ document.addEventListener('DOMContentLoaded', () => {
         songs.forEach((song, index) => {
             const isActive = index === 0 ? 'active' : '';
             indicatorsHTML += `<button type="button" data-bs-target="#song-banner-carousel" data-bs-slide-to="${index}" class="${isActive}" aria-current="${isActive ? 'true' : 'false'}" aria-label="Slide ${index + 1}"></button>`;
+            // MODIFIED: Removed .carousel-caption to get rid of text
             innerHTML += `
                 <div class="carousel-item ${isActive}" data-index="${index}">
                     <img src="${song.cover}" class="d-block w-100" alt="${song.title}">
-                    <div class="carousel-caption">
-                        <h3>${song.title}</h3>
-                        <p>${song.artist}</p>
-                    </div>
                     <i class="fas fa-play-circle banner-play-icon"></i>
                 </div>`;
         });
@@ -159,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCards(songArray) {
-        songCardContainer.className = 'row g-3 row-cols-3 row-cols-md-5 row-cols-lg-8 grid-view';
+        songCardContainer.className = 'row g-2 g-md-3 row-cols-2 row-cols-sm-3 row-cols-md-5 row-cols-lg-8 grid-view';
         if (songArray.length === 0) { songCardContainer.innerHTML = `<p class="text-center text-muted fs-5 mt-4">No songs found.</p>`; return; }
         songCardContainer.innerHTML = songArray.map((song, index) => `<div class="col" data-index="${index}" data-album-id="${song.albumId}" data-album-name="${song.albumName}"><div class="song-circle-item"><div class="image-container"><img src="${song.cover}" alt="${song.title} cover" crossorigin="anonymous"><button class="play-button" aria-label="Play ${song.title}"><i class="bi bi-play-circle-fill"></i></button></div><h5><a href="#">${song.title}</a></h5><p>${song.artist}</p></div></div>`).join('');
         updateNowPlayingIndicator();
@@ -283,12 +280,10 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileSearchCloseBtn.addEventListener("click", () => { topNavbar.classList.remove("search-active"); });
         const sidebarElement = document.getElementById("sidebarMenu"); if (sidebarElement) { const offcanvas = new bootstrap.Offcanvas(sidebarElement); sidebarElement.addEventListener("click", e => { if (e.target.closest(".nav-link") || e.target.closest(".dropdown-item")) { offcanvas.hide(); } }); }
         
-        // MODIFIED: Click listener for the entire banner slide
         bannerContainer.addEventListener('click', e => {
             if (e.target.closest('.carousel-control-prev, .carousel-control-next, .carousel-indicators')) {
-                return; // Ignore clicks on Bootstrap controls
+                return;
             }
-            
             const slideItem = e.target.closest('.carousel-item');
             if (slideItem) {
                 const indexToPlay = parseInt(slideItem.dataset.index, 10);
@@ -318,12 +313,13 @@ document.addEventListener('DOMContentLoaded', () => {
             fetchSongs('malayalam trending'), 
         ]);
 
-        // MODIFIED: Use "Trending Tamil" songs for the banner
         const bannerSongs = songResults[3].songs.slice(0, 5);
         renderBanner(bannerSongs);
         
         if (bannerSongs.length > 0) {
             setDefaultPlayerState(bannerSongs[0]);
+        } else if (songResults[0].songs.length > 0) {
+            setDefaultPlayerState(songResults[0].songs[0]);
         }
         
         const guaranteedArtistNames = ['Sid Sriram', 'Devi Sri Prasad', 'Thaman S', 'Anirudh Ravichander', 'Shreya Ghoshal'];
