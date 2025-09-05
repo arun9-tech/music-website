@@ -5,10 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Harmony - Music Streaming</title>
     <link rel="icon" type="image/png" href="img/35.jpg">
+    
+    <!-- External CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap Icons for cleaner mobile player icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Your Custom CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,7 +23,7 @@
             <div class="col-lg-2 sidebar offcanvas-lg offcanvas-start flex-column" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
                 <div class="offcanvas-header">
                     <a href="#" class="logo" id="sidebarMenuLabel">
-                        <img src="img/36.jpg" alt="Harmony Logo">
+                        <img src="logo.png" alt="Harmony Logo">
                         <span>Harmony</span>
                     </a>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
@@ -26,7 +31,23 @@
                 <div class="offcanvas-body d-flex flex-column">
                     <ul class="nav flex-column sidebar-main-nav">
                         <li><a class="nav-link" href="#" id="menu-home"><i class="fas fa-home"></i> Home</a></li>
-                        <li><a class="nav-link" href="#" id="menu-liked-songs"><i class="fas fa-heart"></i> Liked Songs</a></li>
+                        <li><a class="nav-link" href="#" id="menu-search"><i class="fas fa-search"></i> Search</a></li>
+                        <li>
+                            <a class="nav-link nav-link-split" href="#" id="menu-library">
+                                <span><i class="fas fa-book"></i> Your Library</span>
+                                <span class="create-playlist-icon" title="Create Playlist"><i class="fas fa-plus"></i></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <ul class="nav flex-column sidebar-main-nav mt-3">
+                         <li><a class="nav-link" href="#" id="menu-liked-songs"><i class="fas fa-heart"></i> Liked Songs</a></li>
+                    </ul>
+                    <hr class="sidebar-divider">
+                    <div class="user-playlists-container flex-grow-1">
+                        <ul class="nav flex-column" id="user-playlists-nav"></ul>
+                    </div>
+                     <ul class="nav flex-column sidebar-main-nav mt-auto">
+                        <li><a class="nav-link" href="#" id="menu-premium"><i class="fas fa-crown"></i> Get Premium</a></li>
                     </ul>
                 </div>
             </div>
@@ -35,54 +56,47 @@
             <div class="col-lg-10 main-content">
                 <div class="top-navbar align-items-center">
                     <div class="nav-actions d-flex align-items-center gap-3">
-                        <div class="d-flex align-items-center gap-3" id="main-nav-actions">
-                            <button class="btn btn-dark d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-label="Toggle navigation"><i class="fas fa-bars"></i></button>
-                            <button class="btn" id="back-btn" aria-label="Go Back"><i class="fas fa-chevron-left"></i></button>
-                            <button class="btn" id="forward-btn" aria-label="Go Forward"><i class="fas fa-chevron-right"></i></button>
-                        </div>
-                        <button class="btn btn-dark d-lg-none" id="mobile-search-btn" aria-label="Open Search"><i class="fas fa-search"></i></button>
+                        <a href="#" class="logo d-lg-none" style="padding: 0; margin: 0; gap: 8px;">
+                            <img src="logo.png" alt="Harmony Logo" style="width: 32px; height: 32px;">
+                            <span style="font-size: 20px;">Harmony</span>
+                        </a>
+                        <a href="#" class="logo d-none d-lg-flex" id="navbar-logo">
+                            <img src="logo.png" alt="Harmony Logo">
+                            <span>Harmony</span>
+                        </a>
                     </div>
                     <div class="search-bar d-flex align-items-center" id="search-bar-container">
                         <i class="fas fa-search me-2"></i>
                         <input type="text" placeholder="What do you want to listen to?">
+                        <button class="btn voice-search-btn" id="voice-search-btn" aria-label="Search by voice"><i class="fas fa-microphone"></i></button>
                         <button class="btn d-lg-none" id="mobile-search-close-btn" aria-label="Close Search"><i class="fas fa-times"></i></button>
                     </div>
-                    <a href="#" class="header-logo">
-                        <img src="logo.png" alt="Harmony Logo">
-                        <span>Rhythmos</span>
-                    </a>
-                </div>
-
-                <!-- BANNER SECTION -->
-                <div id="song-banner-carousel-container">
-                    <div id="song-banner-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
-                        <div class="carousel-indicators" id="banner-indicators">
-                            <!-- Indicators will be generated by JS -->
-                        </div>
-                        <div class="carousel-inner" id="banner-inner">
-                            <!-- Carousel items will be generated by JS -->
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#song-banner-carousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#song-banner-carousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+                    <div class="user-profile">
+                        <button class="btn btn-light upgrade-btn">Upgrade</button>
+                        <button class="btn profile-btn" aria-label="User Profile"><i class="fas fa-user-circle"></i></button>
                     </div>
                 </div>
-                <!-- END BANNER SECTION -->
-                
+
+                <!-- BANNER CAROUSEL -->
+                <div id="song-banner-carousel-container">
+                    <div id="song-banner-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                        <div class="carousel-indicators" id="banner-indicators"></div>
+                        <div class="carousel-inner" id="banner-inner"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#song-banner-carousel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#song-banner-carousel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>
+                    </div>
+                </div>
+
                 <div class="content-section">
                     <div class="d-flex justify-content-between align-items-center">
                         <h2 class="section-title" id="content-title"></h2>
+                        <!-- This button is only visible on mobile when in a library/playlist view -->
+                        <button class="btn-icon d-lg-none" id="mobile-create-playlist-btn" title="Create New Playlist">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
-                    <div id="song-card-container">
-                        <!-- Song cards are dynamically generated by JavaScript -->
-                    </div>
+                    <div id="song-card-container"></div>
                 </div>
-
                 <footer class="content-section site-footer">
                     <h2 class="section-title">Top Artists</h2>
                     <div class="top-artists-container" id="top-artists-container"></div>
@@ -91,23 +105,19 @@
         </div>
     </div>
 
+    <!-- ... (All Modals and other elements remain the same as the previous full code response) ... -->
+    
     <!-- PLAYER BAR -->
     <div class="player-bar">
-        <div class="now-playing" id="now-playing-clickable-area" role="button" title="Expand View">
+        <div class="now-playing">
             <div class="track-info">
-                 <div class="track-cover-art">
-                    <img src="" alt="Now Playing">
-                    <i class="fas fa-music initial-icon"></i>
-                </div>
+                 <div class="track-cover-art"><img src="" alt="Now Playing"><i class="fas fa-music initial-icon"></i></div>
                 <div class="track-details">
-                    <div class="track-name"><a href="#">Rhythmos</a></div>
+                    <div class="track-name"><a href="#">Harmony</a></div>
                     <div class="track-artist"><a href="#">Ready to play...</a></div>
                 </div>
                 <div class="d-flex align-items-center ms-3 gap-3 track-actions">
-                    <div class="player-icon-wrapper" id="player-heart-icon-wrapper" title="Like">
-                        <i class="far fa-heart"></i>
-                        <i class="fas fa-heart" style="display: none;"></i>
-                    </div>
+                    <div class="player-icon-wrapper" id="player-heart-icon-wrapper" title="Like"><i class="far fa-heart"></i><i class="fas fa-heart" style="display: none;"></i></div>
                 </div>
             </div>
         </div>
@@ -115,10 +125,7 @@
             <div class="control-buttons">
                 <button id="shuffle-btn" aria-label="Shuffle"><i class="fas fa-random"></i></button>
                 <button id="prev-btn" aria-label="Previous Track"><i class="fas fa-step-backward"></i></button>
-                <button class="play-pause" aria-label="Play or Pause">
-                    <i id="play-icon" class="fas fa-play-circle"></i>
-                    <i id="pause-icon" class="fas fa-pause-circle" style="display: none;"></i>
-                </button>
+                <button class="play-pause" aria-label="Play or Pause"><i id="play-icon" class="fas fa-play-circle"></i><i id="pause-icon" class="fas fa-pause-circle" style="display: none;"></i></button>
                 <button id="next-btn" aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
                 <button id="repeat-btn" aria-label="Repeat"><i class="bi bi-repeat"></i></button>
             </div>
@@ -129,52 +136,86 @@
             </div>
         </div>
         <div class="extra-controls d-flex justify-content-end align-items-center gap-3">
-            <button id="volume-icon-btn" aria-label="Mute or Unmute">
-                <i id="volume-up-icon" class="fas fa-volume-up"></i>
-                <i id="volume-down-icon" class="fas fa-volume-down" style="display: none;"></i>
-                <i id="volume-mute-icon" class="fas fa-volume-mute" style="display: none;"></i>
-            </button>
+            <button id="volume-icon-btn" aria-label="Mute or Unmute"><i id="volume-up-icon" class="fas fa-volume-up"></i><i id="volume-down-icon" class="fas fa-volume-down" style="display: none;"></i><i id="volume-mute-icon" class="fas fa-volume-mute" style="display: none;"></i></button>
             <div class="volume-bar"><div class="volume-progress"><div class="volume-handle"></div></div></div>
         </div>
     </div>
 
-    <!-- NOW PLAYING MODAL (BIG VIEW) -->
-    <div class="modal fade" id="nowPlayingModal" tabindex="-1" aria-labelledby="nowPlayingModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-fullscreen-md-down">
+    <!-- MINI PLAYER -->
+    <div class="mini-player d-lg-none">
+        <div class="mini-player-progress"></div>
+        <div class="mini-player-content">
+            <div class="track-info">
+                <div class="track-cover-art"><img src="" alt="Now Playing"><i class="fas fa-music initial-icon"></i></div>
+                <div class="track-details">
+                    <div class="track-name"><a>Harmony</a></div>
+                    <div class="track-artist"><a>Ready to play...</a></div>
+                </div>
+            </div>
+            <div class="mini-player-controls">
+                <button class="play-pause" aria-label="Play or Pause">
+                    <i class="bi bi-play-circle-fill"></i>
+                    <i class="bi bi-pause-circle-fill" style="display: none;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="mobile-nav-bar d-lg-none">
+        <a href="#" class="nav-item active" id="mobile-nav-home"><i class="fas fa-home"></i><span>Home</span></a>
+        <a href="#" class="nav-item" id="mobile-nav-search"><i class="fas fa-search"></i><span>Search</span></a>
+        <a href="#" class="nav-item" id="mobile-nav-library"><i class="fas fa-book"></i><span>Your Library</span></a>
+        <a href="#" class="nav-item" id="mobile-nav-premium"><i class="fas fa-crown"></i><span>Premium</span></a>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Add to Playlist Modal -->
+    <div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="addToPlaylistModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="nowPlayingModalLabel">Now Playing</h5>
+                    <h5 class="modal-title" id="addToPlaylistModalLabel">Add to Playlist</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <img id="modal-song-cover" src="img/1.jpg" alt="Current song cover">
-                    <h3 id="modal-song-title">Select a Song</h3>
-                    <p id="modal-song-artist">Harmony Radio</p>
-                    
-                    <div class="modal-player-controls">
-                        <div class="progress-bar-container" id="modal-progress-bar-container">
-                            <span class="time current-time" id="modal-current-time">0:00</span>
-                            <div class="progress-bar"><div class="progress"><div class="progress-handle"></div></div></div>
-                            <span class="time duration" id="modal-duration">0:00</span>
-                        </div>
-                        <div class="control-buttons">
-                            <button id="modal-shuffle-btn" aria-label="Shuffle"><i class="fas fa-random"></i></button>
-                            <button id="modal-prev-btn" aria-label="Previous Track"><i class="fas fa-step-backward"></i></button>
-                            <button class="play-pause" id="modal-play-pause-btn" aria-label="Play or Pause">
-                                <i id="modal-play-icon" class="fas fa-play-circle"></i>
-                                <i id="modal-pause-icon" class="fas fa-pause-circle" style="display: none;"></i>
-                            </button>
-                            <button id="modal-next-btn" aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
-                            <button id="modal-repeat-btn" aria-label="Repeat"><i class="bi bi-repeat"></i></button>
-                        </div>
-                    </div>
+                <div class="modal-body" id="playlist-modal-body">
+                    <!-- Playlist options will be inserted here by JavaScript -->
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Create Playlist Modal -->
+    <div class="modal fade" id="createPlaylistModal" tabindex="-1" aria-labelledby="createPlaylistModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createPlaylistModalLabel">Create New Playlist</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-playlist-form">
+                        <div class="mb-3">
+                            <label for="playlist-name-input" class="form-label">Playlist Name</label>
+                            <input type="text" class="form-control form-control-dark" id="playlist-name-input" placeholder="My Awesome Mix" required minlength="1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" form="create-playlist-form" class="btn btn-primary upgrade-btn" style="background-color: var(--primary);">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JS Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    
+    <!-- Your Custom JS -->
     <script src="script.js"></script>
 </body>
 </html>
