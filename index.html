@@ -22,7 +22,7 @@
             <!-- Sidebar -->
             <div class="col-lg-2 sidebar offcanvas-lg offcanvas-start flex-column" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
                 <div class="offcanvas-header">
-                    <a href="#" class="logo js-go-home" id="sidebarMenuLabel">
+                    <a href="#" class="logo js-go-home" id="sidebarMenuLabel" aria-label="Go to Home">
                         <img src="logo.png" alt="Harmony Logo">
                         <span>Harmony</span>
                     </a>
@@ -56,11 +56,13 @@
             <div class="col-lg-10 main-content">
                 <div class="top-navbar align-items-center">
                     <div class="nav-actions d-flex align-items-center gap-3">
-                        <a href="#" class="logo d-lg-none js-go-home" style="padding: 0; margin: 0; gap: 8px;">
+                        <button id="nav-back-btn" class="nav-btn" aria-label="Go Back"><i class="fas fa-chevron-up"></i></button>
+                        
+                        <a href="#" class="logo d-lg-none js-go-home" style="padding: 0; margin: 0; gap: 8px;" aria-label="Go to Home">
                             <img src="logo.png" alt="Harmony Logo" style="width: 32px; height: 32px;">
                             <span style="font-size: 20px;">Harmony</span>
                         </a>
-                        <a href="#" class="logo d-none d-lg-flex js-go-home" id="navbar-logo">
+                        <a href="#" class="logo d-none d-lg-flex js-go-home" id="navbar-logo" aria-label="Go to Home">
                             <img src="logo.png" alt="Harmony Logo">
                             <span>Harmony</span>
                         </a>
@@ -69,10 +71,7 @@
                         <i class="fas fa-search me-2"></i>
                         <input type="text" placeholder="What do you want to listen to?">
                         <button class="btn voice-search-btn" id="voice-search-btn" aria-label="Search by voice"><i class="fas fa-microphone"></i></button>
-                        <button class="btn d-lg-none" id="mobile-search-close-btn" aria-label="Close Search"><i class="fas fa-times"></i></button>
-                    </div>
-                    <div class="user-profile">
-                        <button class="btn profile-btn" aria-label="User Profile"><i class="fas fa-user-circle"></i></button>
+                        <!-- REMOVED: The 'X' button was here and is now gone. -->
                     </div>
                 </div>
 
@@ -174,20 +173,16 @@
                 </div>
             </div>
             <div class="mini-player-controls">
-                <!-- Previous Button -->
                 <button id="mini-player-prev-btn" class="mini-player-skip-btn" aria-label="Previous Track">
                     <i class="bi bi-skip-start-fill"></i>
                 </button>
-                <!-- Play/Pause Button -->
                 <button class="play-pause" aria-label="Play or Pause">
                     <i class="bi bi-play-circle-fill"></i>
                     <i class="bi bi-pause-circle-fill" style="display: none;"></i>
                 </button>
-                <!-- Next Button -->
                 <button id="mini-player-next-btn" class="mini-player-skip-btn" aria-label="Next Track">
                     <i class="bi bi-skip-end-fill"></i>
                 </button>
-                <!-- Like Button -->
                 <button class="mini-player-like-btn" aria-label="Like or Unlike">
                     <i class="far fa-heart"></i>
                     <i class="fas fa-heart"></i>

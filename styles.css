@@ -63,9 +63,6 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 #navbar-logo { padding: 0; margin-bottom: 0; }
 #navbar-logo img { width: 32px; height: 32px; }
 #navbar-logo span { font-size: 20px; }
-.user-profile { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: 1rem; }
-.profile-btn { border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; padding: 0; background-color: rgba(0,0,0,0.7); color: white; font-size: 1.5rem; transition: all 0.2s ease; }
-.profile-btn:hover { transform: scale(1.1); background-color: var(--primary); }
 .search-bar { background-color: #2a2a2a; border-radius: 500px; padding: 10px 16px; width: 100%; max-width: 400px; border: 2px solid transparent; transition: all 0.3s ease; }
 .search-bar:focus-within { background-color: var(--lighter-dark); border-color: white; }
 .search-bar input { border: none; outline: none; width: 100%; background: transparent; color: white; }
@@ -73,6 +70,30 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .voice-search-btn { background: none; border: none; color: var(--light-gray); padding: 0 8px; transition: color 0.2s ease; }
 .voice-search-btn:hover { color: white; }
 .voice-search-btn.listening i { color: var(--primary); animation: pulse 1.5s infinite; }
+
+#nav-back-btn {
+    background-color: rgba(0,0,0,0.7);
+    border: none;
+    color: var(--light-gray);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    visibility: hidden;
+    opacity: 0;
+}
+#nav-back-btn.visible {
+    visibility: visible;
+    opacity: 1;
+}
+#nav-back-btn:hover {
+    background-color: rgba(0,0,0,1);
+    color: white;
+}
 
 /* --- MAIN CONTENT & LOADING SPINNER --- */
 .main-content {
@@ -172,7 +193,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     border-radius: 8px;
 }
 #detail-header.artist-page .detail-header-image img {
-    border-radius: 50%; /* Make artist images circular */
+    border-radius: 50%;
 }
 .detail-header-content {
     z-index: 2;
@@ -197,12 +218,21 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     text-decoration: underline !important;
 }
 
+/* NEW: Styles for the header when there is no image */
+#detail-header.no-image-header {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+
 /* --- BANNER CAROUSEL --- */
 .banner-container {
     max-width: 1400px;
     margin: 16px auto 0;
     padding: 0 clamp(16px, 5vw, 32px);
-    display: none; /* Hidden by default */
+    display: none; 
 }
 .main-content.home-view .banner-container {
     display: block;
@@ -436,12 +466,16 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     padding: 8px 16px 8px 8px;
     cursor: pointer;
     font-size: 14px;
-    opacity: 0;
+    opacity: 0; 
     transition: opacity 0.2s ease, color 0.2s ease;
     flex-shrink: 0;
 }
-#user-playlists-nav li:hover .delete-playlist-btn { opacity: 1; }
-.delete-playlist-btn:hover { color: #ff4d4d; }
+#user-playlists-nav li:hover .delete-playlist-btn { 
+    opacity: 1; 
+}
+.delete-playlist-btn:hover { 
+    color: #ff4d4d; 
+}
 
 /* --- PLAYER BAR --- */
 .player-bar { background-color: var(--light-dark); height: 80px; position: fixed; bottom: 0; width: 100%; border-top: 1px solid var(--gray); padding: 0 16px; display: grid; grid-template-columns: 1fr 2fr 1fr; align-items: center; z-index: 1020; }
@@ -461,7 +495,6 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 .player-bar.song-loaded .track-actions { visibility: visible; }
 .player-bar.song-loaded .track-cover-art .initial-icon { display: none; }
 
-/* === LIKE BUTTON STYLES (FIXED) === */
 .player-icon-wrapper, .mini-player-like-btn { cursor: pointer; }
 .player-icon-wrapper .fas.fa-heart,
 .mini-player-like-btn .fas.fa-heart {
@@ -522,7 +555,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
 @keyframes button-pop { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
 @keyframes heart-pop { 0% { transform: scale(1); } 25% { transform: scale(1.3); } 50% { transform: scale(0.9); } 100% { transform: scale(1); } }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-.play-button:active, .control-buttons button:active, .mini-player-controls .play-pause:active, .banner-btn:active, .profile-btn:active { animation: button-pop 0.2s ease-out; }
+.play-button:active, .control-buttons button:active, .mini-player-controls .play-pause:active, .banner-btn:active { animation: button-pop 0.2s ease-out; }
 .player-icon-wrapper.pop, .mini-player-like-btn.pop { animation: heart-pop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 #toast-container { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 2000; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; }
 .toast-message { background-color: var(--primary); color: white; padding: 12px 24px; border-radius: 500px; font-weight: 600; box-shadow: 0 4px 20px rgba(0,0,0,0.5); animation: fadeInUp 0.5s ease-out both; }
@@ -534,12 +567,11 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     body { overflow-y: visible; }
     .player-bar { display: none; }
     .main-content { padding-bottom: 141px; }
-    .top-navbar { padding: 12px 16px; grid-template-columns: auto 1fr auto; }
+    .top-navbar { padding: 12px 16px; grid-template-columns: auto 1fr; }
     .top-navbar .search-bar { display: none; }
     .top-navbar.search-active .search-bar { display: flex; position: absolute; top: 0; left: 0; right: 0; width: 100%; height: 100%; max-width: 100%; background-color: var(--dark); z-index: 1001; border-radius: 0; }
     .top-navbar.search-active .nav-actions, .top-navbar.search-active .user-profile { display: none; }
 
-    /* Detail header mobile styles */
     #detail-header {
         flex-direction: column;
         align-items: center;
@@ -555,7 +587,6 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
         font-size: 2.5rem;
     }
 
-    /* Banner mobile styles */
     #bannerCarousel, #bannerCarousel .carousel-item {
         height: 250px;
     }
@@ -566,7 +597,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
         background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%);
     }
     #bannerCarousel .carousel-item::after {
-        background: none; /* remove desktop gradient */
+        background: none;
     }
      #bannerCarousel .carousel-caption h1 {
         font-size: 1.8rem;
@@ -591,10 +622,10 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     .mini-player-controls {
         display: flex;
         align-items: center;
-        gap: 8px; /* Reduced gap to fit more icons */
+        gap: 8px;
     }
     .mini-player-controls .play-pause {
-        font-size: 2.25rem; /* 36px */
+        font-size: 2.25rem;
         color: white;
         background: none;
         border: none;
@@ -602,7 +633,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
         line-height: 1;
     }
     .mini-player-skip-btn {
-        font-size: 1.75rem; /* 28px */
+        font-size: 1.75rem;
         color: var(--light-gray);
         background: none;
         border: none;
@@ -617,13 +648,13 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
         background: none;
         border: none;
         color: var(--light-gray);
-        font-size: 1.25rem; /* 20px */
+        font-size: 1.25rem;
         padding: 0;
         line-height: 1;
-        margin-left: 8px; /* Add some space between controls and like button */
+        margin-left: 8px;
     }
     .mini-player-like-btn.active .fa-heart {
-        color: var(--primary); /* Keep active color */
+        color: var(--primary);
     }
 
     .mobile-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background-color: var(--light-dark); border-top: 1px solid var(--gray); display: flex; justify-content: space-around; align-items: center; z-index: 1010; }
@@ -634,6 +665,7 @@ a, a:hover, a:focus, a:active { text-decoration: none; color: inherit; }
     .delete-playlist-btn {
         opacity: 1;
     }
+    
     .song-list-header, .song-list-item {
         grid-template-columns: 30px 1fr 40px;
     }
