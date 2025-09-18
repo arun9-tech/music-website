@@ -66,12 +66,12 @@
                             <img src="logo.png" alt="Harmony Logo">
                             <span>Harmony</span>
                         </a>
+						<!-- REMOVED: Settings button was here -->
                     </div>
                     <div class="search-bar d-flex align-items-center" id="search-bar-container">
                         <i class="fas fa-search me-2"></i>
                         <input type="text" placeholder="What do you want to listen to?">
                         <button class="btn voice-search-btn" id="voice-search-btn" aria-label="Search by voice"><i class="fas fa-microphone"></i></button>
-                        <!-- REMOVED: The 'X' button was here and is now gone. -->
                     </div>
                 </div>
 
@@ -148,12 +148,15 @@
                 <button class="play-pause" aria-label="Play or Pause"><i id="play-icon" class="fas fa-play-circle"></i><i id="pause-icon" class="fas fa-pause-circle" style="display: none;"></i></button>
                 <button id="next-btn" aria-label="Next Track"><i class="fas fa-step-forward"></i></button>
                 <button id="repeat-btn" aria-label="Repeat"><i class="bi bi-repeat"></i></button>
+                <!-- NEW: Playback speed button -->
+                <button id="playback-speed-btn" class="playback-speed-btn" aria-label="Playback Speed">1x</button>
             </div>
             <div class="progress-bar-container">
                 <span class="time current-time">0:00</span>
                 <div class="progress-bar"><div class="progress"><div class="progress-handle"></div></div></div>
                 <span class="time duration">0:00</span>
             </div>
+			<canvas id="mini-visualizer" width="240" height="36" aria-hidden="true"></canvas>
         </div>
         <div class="extra-controls d-flex justify-content-end align-items-center gap-3">
             <button id="volume-icon-btn" aria-label="Mute or Unmute"><i id="volume-up-icon" class="fas fa-volume-up"></i><i id="volume-down-icon" class="fas fa-volume-down" style="display: none;"></i><i id="volume-mute-icon" class="fas fa-volume-mute" style="display: none;"></i></button>
@@ -236,6 +239,38 @@
             </div>
         </div>
     </div>
+
+	<!-- REMOVED: Settings Modal was here -->
+
+	<!-- PREMIUM MODAL -->
+	<div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="premiumModalLabel">Go Premium</h5>
+					<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<ul class="mb-3">
+						<li>Ad-free listening</li>
+						<li>High quality audio</li>
+						<li>Unlimited skips</li>
+					</ul>
+					<div class="form-check form-switch mb-2">
+						<input class="form-check-input" type="checkbox" id="toggle-premium">
+						<label class="form-check-label" for="toggle-premium">Activate Premium</label>
+					</div>
+					<small class="text-muted">This is a demo toggle. No payment required.</small>
+				</div>
+				<div class="modal-footer d-flex flex-wrap gap-2">
+					<button type="button" class="btn btn-primary" id="premium-trial-btn">Start 7‑day Trial</button>
+					<button type="button" class="btn btn-success" id="premium-monthly-btn">Upgrade Monthly</button>
+					<button type="button" class="btn btn-warning" id="premium-yearly-btn">Upgrade Yearly</button>
+					<button type="button" class="btn btn-outline-light" id="premium-support-btn">Contact Support</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
     <!-- External JS Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
