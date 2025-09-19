@@ -570,6 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS ---
     function setupEventListeners() {
+        // ... (all other event listeners are correct)
         document.querySelectorAll(".play-pause").forEach(btn => btn.addEventListener("click", togglePlay));
         prevBtn.addEventListener("click", prevSong);
         nextBtn.addEventListener("click", nextSong);
@@ -585,43 +586,60 @@ document.addEventListener('DOMContentLoaded', () => {
         audioPlayer.addEventListener("timeupdate", updateProgress);
         audioPlayer.addEventListener("ended", handleSongEnd);
         initSpeechRecognition();
-        
         document.querySelectorAll('.js-go-home').forEach(logo => logo.addEventListener('click', e => { e.preventDefault(); init(true); }));
         menuHome.addEventListener('click', e => { e.preventDefault(); init(true); });
         menuSearch.addEventListener('click', e => { e.preventDefault(); showSearchView(); searchInput.focus(); });
         menuLibrary.addEventListener('click', e => { if (e.target.closest('.create-playlist-icon')) { e.preventDefault(); e.stopPropagation(); createPlaylist(); } else { e.preventDefault(); showLibraryIndex(); } });
         menuLikedSongs.addEventListener('click', e => { e.preventDefault(); showLikedSongs(); });
         
-        userPlaylistsNav.addEventListener('click', e => {
-            const playlistLink = e.target.closest('a[data-playlist-name]');
-            const deleteBtn = e.target.closest('.delete-playlist-btn');
-            if (deleteBtn) { e.preventDefault(); deletePlaylist(deleteBtn.dataset.playlistName); } 
-            else if (playlistLink) { e.preventDefault(); showUserPlaylist(playlistLink.dataset.playlistName); }
-        });
+        // --- FINAL, CORRECTED EVENT HANDLING FOR PLAYLISTS ---
+        let longPressTimer = null;
+        let longPressActionTriggered = false;
 
-        // --- NEW: RELIABLE MOBILE & DESKTOP DELETE LOGIC ---
-        let pressTimer;
-
-        const cancelPressTimer = () => {
-            clearTimeout(pressTimer);
-        };
-
-        // For mobile touch-and-hold
+        // Start timer on touch
         userPlaylistsNav.addEventListener('touchstart', e => {
+            longPressActionTriggered = false; // Reset on new touch
             const li = e.target.closest('li');
             if (!li) return;
-            pressTimer = setTimeout(() => {
+
+            longPressTimer = setTimeout(() => {
+                e.preventDefault(); // Prevent default actions like text selection
+                longPressActionTriggered = true;
                 document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => {
                     if (item !== li) item.classList.remove('show-delete');
                 });
                 li.classList.toggle('show-delete');
-            }, 750); // 750ms for a long press
-        }, true);
+            }, 750);
+        }, { passive: false }); // Use {passive: false} to allow preventDefault
 
-        userPlaylistsNav.addEventListener('touchend', cancelPressTimer);
-        userPlaylistsNav.addEventListener('touchmove', cancelPressTimer);
+        // Clear timer if touch ends or moves
+        userPlaylistsNav.addEventListener('touchend', () => clearTimeout(longPressTimer));
+        userPlaylistsNav.addEventListener('touchmove', () => clearTimeout(longPressTimer));
 
-        // For desktop right-click
+        // Handle clicks, considering if a long press just happened
+        userPlaylistsNav.addEventListener('click', e => {
+            const deleteBtn = e.target.closest('.delete-playlist-btn');
+            if (deleteBtn) {
+                e.preventDefault();
+                deletePlaylist(deleteBtn.dataset.playlistName);
+                return;
+            }
+
+            // If a long press was triggered, consume the click and do nothing else
+            if (longPressActionTriggered) {
+                e.preventDefault();
+                return;
+            }
+            
+            // Otherwise, it's a normal tap, so navigate
+            const playlistLink = e.target.closest('a[data-playlist-name]');
+            if (playlistLink) {
+                e.preventDefault();
+                showUserPlaylist(playlistLink.dataset.playlistName);
+            }
+        });
+
+        // Handle desktop right-click separately
         userPlaylistsNav.addEventListener('contextmenu', e => {
             e.preventDefault();
             const li = e.target.closest('li');
@@ -633,43 +651,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Hide the delete button when clicking elsewhere on the page
-        document.addEventListener('click', (e) => {
+        // Hide delete buttons when clicking anywhere else
+        document.addEventListener('click', e => {
             if (!e.target.closest('#user-playlists-nav li')) {
                 document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => item.classList.remove('show-delete'));
             }
         });
 
+        // --- (Rest of the event listeners are correct) ---
         searchInput.addEventListener("keyup", e => { clearTimeout(searchTimeout); const query = e.target.value.trim(); if (query) { searchTimeout = setTimeout(async () => { songCardContainer.innerHTML = `<div class="loading-spinner"></div>`; const { songs } = await fetchSongs(query); updateView({ title: `Results for "${query}"`, songs, view: "search", activeMenu: menuSearch }); }, 500); } });
-        
         mobileNavHome.addEventListener('click', e => { e.preventDefault(); init(true); });
         mobileNavSearch.addEventListener('click', e => { e.preventDefault(); topNavbar.classList.add("search-active"); showSearchView(); searchInput.focus(); });
         mobileNavLibrary.addEventListener('click', e => { e.preventDefault(); showLibraryIndex(); });
         mainContent.addEventListener('scroll', () => topNavbar.classList.toggle('scrolled', mainContent.scrollTop > 10));
         mobileCreatePlaylistBtn.addEventListener('click', createPlaylist);
-
-        navBackBtn.addEventListener('click', () => {
-            if (historyStack.length > 1) {
-                isNavigatingHistory = true;
-                historyStack.pop(); 
-                updateView(historyStack[historyStack.length - 1]);
-                isNavigatingHistory = false;
-            }
-        });
-
+        navBackBtn.addEventListener('click', () => { if (historyStack.length > 1) { isNavigatingHistory = true; historyStack.pop(); updateView(historyStack[historyStack.length - 1]); isNavigatingHistory = false; } });
         songCardContainer.addEventListener("click", e => {
             if (e.target.closest('#find-songs-btn')) { e.preventDefault(); showSearchView(); searchInput.focus(); return; }
             if (e.target.closest('.artist-link')?.dataset.artistId) { e.preventDefault(); showArtistPage(e.target.closest('.artist-link').dataset.artistId); return; }
             if (e.target.closest('.album-link')) { e.preventDefault(); showAlbumPage(e.target.closest('.album-link').dataset.albumId); return; }
             const libraryItem = e.target.closest(".library-index-item");
             if (libraryItem) { if (libraryItem.dataset.action === 'show-liked') showLikedSongs(); else if (libraryItem.dataset.playlistName) showUserPlaylist(libraryItem.dataset.playlistName); return; }
-            
             const addToPlaylistBtn = e.target.closest(".add-to-playlist-icon");
             if (addToPlaylistBtn) { e.stopPropagation(); const songId = addToPlaylistBtn.dataset.songId; const foundSong = currentViewPlaylist.find(s => s.id === songId); if (foundSong) { songToAdd = foundSong; const modalBody = document.getElementById('playlist-modal-body'); const playlists = getFromStorage('userPlaylists') || {}; modalBody.innerHTML = Object.keys(playlists).length > 0 ? `<ul class="list-group list-group-flush">${Object.keys(playlists).map(name => `<li class="list-group-item" data-playlist-name="${name}">${name}</li>`).join('')}</ul>` : '<p class="text-center text-muted">You have no playlists.</p>'; addToPlaylistModal.show(); } return; }
-
             const removeFromPlaylistBtn = e.target.closest(".remove-from-playlist-icon");
             if(removeFromPlaylistBtn) { e.stopPropagation(); const songId = removeFromPlaylistBtn.dataset.songId; removeSongFromPlaylist(contentTitle.textContent, songId); return; }
-
             const songItem = e.target.closest(".col, .song-list-item");
             if (!songItem) return;
             if (e.target.closest(".play-button") || e.target.closest(".index-container") || (e.target.closest('.title-artist') && songItem.classList.contains('song-list-item'))) {
@@ -689,13 +695,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 showAlbumPage(songItem.dataset.albumId);
             }
         });
-        
         createPlaylistForm.addEventListener('submit', (e) => { e.preventDefault(); const playlistName = playlistNameInput.value.trim(); if (playlistName) { const playlists = getFromStorage('userPlaylists') || {}; if (playlists[playlistName]) { showToast(`Playlist "${playlistName}" already exists.`, 'error'); } else { playlists[playlistName] = []; saveToStorage('userPlaylists', playlists); renderUserPlaylists(); showToast(`Playlist "${playlistName}" created`); createPlaylistModal.hide(); if (contentTitle.textContent === "Your Library") showLibraryIndex(); } } });
         document.getElementById('playlist-modal-body').addEventListener('click', e => { if (e.target.closest('.list-group-item')) addSongToPlaylist(e.target.closest('.list-group-item').dataset.playlistName); });
         topArtistsContainer.addEventListener('click', e => { if (e.target.closest('.artist-circle-item')) showArtistPage(e.target.closest('.artist-circle-item').dataset.artistId); });
         playerBar.addEventListener('click', e => { if (e.target.closest('.artist-link')?.dataset.artistId) { e.preventDefault(); showArtistPage(e.target.closest('.artist-link').dataset.artistId); } });
         bannerContainer.addEventListener('click', e => { const playBtn = e.target.closest('.banner-play-btn'); if (playBtn) { const indexToPlay = bannerPlaylist.findIndex(s => s.id === playBtn.dataset.songId); if (indexToPlay !== -1) { if (JSON.stringify(currentPlaylist) !== JSON.stringify(bannerPlaylist)) { currentPlaylist = [...bannerPlaylist]; if (isShuffled) { isShuffled = false; updateShuffleIcon(); } } loadSong(indexToPlay); playAudio(); } } });
-        
         playbackSpeedBtn.addEventListener('click', () => { currentRateIndex = (currentRateIndex + 1) % playbackRates.length; const newRate = playbackRates[currentRateIndex]; audioPlayer.playbackRate = newRate; playbackSpeedBtn.textContent = `${newRate}x`; playbackSpeedBtn.classList.toggle('active', newRate !== 1); saveToStorage('playbackRate', newRate); });
         if (premiumButtons.length && premiumModal) premiumButtons.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); premiumModal.show(); }));
         if (premiumToggleInput) premiumToggleInput.addEventListener('change', () => { const enabled = premiumToggleInput.checked; localStorage.setItem('isPremium', JSON.stringify(!!enabled)); showToast(enabled ? 'Premium activated' : 'Premium deactivated'); });
