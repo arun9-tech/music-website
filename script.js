@@ -258,26 +258,18 @@ document.addEventListener('DOMContentLoaded', () => {
         songToAdd = null;
     }
 
-    // CORRECTED FUNCTION
     function removeSongFromPlaylist(playlistName, songId) {
         const playlists = getFromStorage('userPlaylists');
         if (playlists[playlistName]) {
-            // Find the song object before filtering, so we can get its title for the toast.
             const songToRemove = playlists[playlistName].find(s => s.id === songId);
-
-            // *** THE FIX: Check if the song was found before proceeding ***
             if (!songToRemove) {
                 console.error(`Song with ID ${songId} not found in playlist "${playlistName}". Cannot remove.`);
                 showToast('Error: Could not find the song to remove.', 'error');
-                return; // Exit the function to prevent a crash
+                return;
             }
-
-            // Now it's safe to filter and show the toast
             playlists[playlistName] = playlists[playlistName].filter(s => s.id !== songId);
             saveToStorage('userPlaylists', playlists);
             showToast(`Removed "${songToRemove.title}" from "${playlistName}"`);
-            
-            // Refresh the view
             showUserPlaylist(playlistName);
         }
     }
@@ -607,17 +599,43 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (playlistLink) { e.preventDefault(); showUserPlaylist(playlistLink.dataset.playlistName); }
         });
 
+        // --- NEW: RELIABLE MOBILE & DESKTOP DELETE LOGIC ---
+        let pressTimer;
+
+        const cancelPressTimer = () => {
+            clearTimeout(pressTimer);
+        };
+
+        // For mobile touch-and-hold
+        userPlaylistsNav.addEventListener('touchstart', e => {
+            const li = e.target.closest('li');
+            if (!li) return;
+            pressTimer = setTimeout(() => {
+                document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => {
+                    if (item !== li) item.classList.remove('show-delete');
+                });
+                li.classList.toggle('show-delete');
+            }, 750); // 750ms for a long press
+        }, true);
+
+        userPlaylistsNav.addEventListener('touchend', cancelPressTimer);
+        userPlaylistsNav.addEventListener('touchmove', cancelPressTimer);
+
+        // For desktop right-click
         userPlaylistsNav.addEventListener('contextmenu', e => {
             e.preventDefault();
             const li = e.target.closest('li');
             if (li) {
-                document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => { if (item !== li) item.classList.remove('show-delete'); });
+                document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => {
+                    if (item !== li) item.classList.remove('show-delete');
+                });
                 li.classList.toggle('show-delete');
             }
         });
-
+        
+        // Hide the delete button when clicking elsewhere on the page
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('#user-playlists-nav')) {
+            if (!e.target.closest('#user-playlists-nav li')) {
                 document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => item.classList.remove('show-delete'));
             }
         });
@@ -698,13 +716,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         songCardContainer.innerHTML = `<div class="loading-spinner"></div>`;
         
-        // Use Promise.all to fetch everything concurrently for faster loading
         const [
             devaraResult,
             songResults,
             artistDetailsResults
         ] = await Promise.all([
-            fetchSongs('Chuttamalle Devara'), // Dynamically fetch the default song
+            fetchSongs('Chuttamalle Devara'), 
             Promise.all([
                 fetchSongs('telugu latest'),
                 fetchSongs('latest english'),
@@ -718,12 +735,10 @@ document.addEventListener('DOMContentLoaded', () => {
             )
         ]);
         
-        // Set the default song using the live data
         const defaultSong = devaraResult.songs[0];
         if (defaultSong) {
             setDefaultPlayerState(defaultSong);
         } else if (songResults[0]?.songs[0]) {
-            // Fallback to the first available song if Devara song isn't found
             setDefaultPlayerState(songResults[0].songs[0]);
         }
 
