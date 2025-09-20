@@ -267,10 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Error: Could not find the song to remove.', 'error');
                 return;
             }
-            playlists[playlistName] = playlists[playlistName].filter(s => s.id !== songId);
-            saveToStorage('userPlaylists', playlists);
-            showToast(`Removed "${songToRemove.title}" from "${playlistName}"`);
-            showUserPlaylist(playlistName);
+            if (confirm(`Are you sure you want to remove "${songToRemove.title}" from this playlist?`)) {
+                playlists[playlistName] = playlists[playlistName].filter(s => s.id !== songId);
+                saveToStorage('userPlaylists', playlists);
+                showToast(`Removed "${songToRemove.title}" from "${playlistName}"`);
+                showUserPlaylist(playlistName);
+            }
         }
     }
 
@@ -570,7 +572,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- EVENT LISTENERS ---
     function setupEventListeners() {
-        // ... (all other event listeners are correct)
         document.querySelectorAll(".play-pause").forEach(btn => btn.addEventListener("click", togglePlay));
         prevBtn.addEventListener("click", prevSong);
         nextBtn.addEventListener("click", nextSong);
@@ -592,31 +593,27 @@ document.addEventListener('DOMContentLoaded', () => {
         menuLibrary.addEventListener('click', e => { if (e.target.closest('.create-playlist-icon')) { e.preventDefault(); e.stopPropagation(); createPlaylist(); } else { e.preventDefault(); showLibraryIndex(); } });
         menuLikedSongs.addEventListener('click', e => { e.preventDefault(); showLikedSongs(); });
         
-        // --- FINAL, CORRECTED EVENT HANDLING FOR PLAYLISTS ---
         let longPressTimer = null;
         let longPressActionTriggered = false;
 
-        // Start timer on touch
         userPlaylistsNav.addEventListener('touchstart', e => {
-            longPressActionTriggered = false; // Reset on new touch
+            longPressActionTriggered = false;
             const li = e.target.closest('li');
             if (!li) return;
 
             longPressTimer = setTimeout(() => {
-                e.preventDefault(); // Prevent default actions like text selection
+                e.preventDefault();
                 longPressActionTriggered = true;
                 document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => {
                     if (item !== li) item.classList.remove('show-delete');
                 });
                 li.classList.toggle('show-delete');
             }, 750);
-        }, { passive: false }); // Use {passive: false} to allow preventDefault
+        }, { passive: false });
 
-        // Clear timer if touch ends or moves
         userPlaylistsNav.addEventListener('touchend', () => clearTimeout(longPressTimer));
-        userPlaylistsNav.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+        userPlaylistsNav.addEventListener('touchmove', () => clearTimeout(longPressTimer), { passive: true });
 
-        // Handle clicks, considering if a long press just happened
         userPlaylistsNav.addEventListener('click', e => {
             const deleteBtn = e.target.closest('.delete-playlist-btn');
             if (deleteBtn) {
@@ -625,13 +622,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // If a long press was triggered, consume the click and do nothing else
             if (longPressActionTriggered) {
                 e.preventDefault();
                 return;
             }
             
-            // Otherwise, it's a normal tap, so navigate
             const playlistLink = e.target.closest('a[data-playlist-name]');
             if (playlistLink) {
                 e.preventDefault();
@@ -639,7 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Handle desktop right-click separately
         userPlaylistsNav.addEventListener('contextmenu', e => {
             e.preventDefault();
             const li = e.target.closest('li');
@@ -651,14 +645,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         
-        // Hide delete buttons when clicking anywhere else
         document.addEventListener('click', e => {
             if (!e.target.closest('#user-playlists-nav li')) {
                 document.querySelectorAll('#user-playlists-nav li.show-delete').forEach(item => item.classList.remove('show-delete'));
             }
         });
 
-        // --- (Rest of the event listeners are correct) ---
         searchInput.addEventListener("keyup", e => { clearTimeout(searchTimeout); const query = e.target.value.trim(); if (query) { searchTimeout = setTimeout(async () => { songCardContainer.innerHTML = `<div class="loading-spinner"></div>`; const { songs } = await fetchSongs(query); updateView({ title: `Results for "${query}"`, songs, view: "search", activeMenu: menuSearch }); }, 500); } });
         mobileNavHome.addEventListener('click', e => { e.preventDefault(); init(true); });
         mobileNavSearch.addEventListener('click', e => { e.preventDefault(); topNavbar.classList.add("search-active"); showSearchView(); searchInput.focus(); });
@@ -673,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const libraryItem = e.target.closest(".library-index-item");
             if (libraryItem) { if (libraryItem.dataset.action === 'show-liked') showLikedSongs(); else if (libraryItem.dataset.playlistName) showUserPlaylist(libraryItem.dataset.playlistName); return; }
             const addToPlaylistBtn = e.target.closest(".add-to-playlist-icon");
-            if (addToPlaylistBtn) { e.stopPropagation(); const songId = addToPlaylistBtn.dataset.songId; const foundSong = currentViewPlaylist.find(s => s.id === songId); if (foundSong) { songToAdd = foundSong; const modalBody = document.getElementById('playlist-modal-body'); const playlists = getFromStorage('userPlaylists') || {}; modalBody.innerHTML = Object.keys(playlists).length > 0 ? `<ul class="list-group list-group-flush">${Object.keys(playlists).map(name => `<li class="list-group-item" data-playlist-name="${name}">${name}</li>`).join('')}</ul>` : '<p class="text-center text-muted">You have no playlists.</p>'; addToPlaylistModal.show(); } return; }
+            if (addToPlaylistBtn) { e.stopPropagation(); const songId = addToPlaylistBtn.dataset.songId; const foundSong = currentViewPlaylist.find(s => s.id === songId); if (foundSong) { songToAdd = foundSong; const modalBody = document.getElementById('playlist-modal-body'); const playlists = getFromStorage('userPlaylists') || {}; modalBody.innerHTML = Object.keys(playlists).length > 0 ? `<ul class="list-group list-group-flush">${Object.keys(playlists).map(name => `<li class="list-group-item" data-playlist-name="${name}">${name}</li>`).join('')}</ul>` : '<p class="text-center text-muted">You have no playlists.</p>'; addToPlaylistModal.show(addToPlaylistBtn); } return; }
             const removeFromPlaylistBtn = e.target.closest(".remove-from-playlist-icon");
             if(removeFromPlaylistBtn) { e.stopPropagation(); const songId = removeFromPlaylistBtn.dataset.songId; removeSongFromPlaylist(contentTitle.textContent, songId); return; }
             const songItem = e.target.closest(".col, .song-list-item");
@@ -701,9 +693,33 @@ document.addEventListener('DOMContentLoaded', () => {
         playerBar.addEventListener('click', e => { if (e.target.closest('.artist-link')?.dataset.artistId) { e.preventDefault(); showArtistPage(e.target.closest('.artist-link').dataset.artistId); } });
         bannerContainer.addEventListener('click', e => { const playBtn = e.target.closest('.banner-play-btn'); if (playBtn) { const indexToPlay = bannerPlaylist.findIndex(s => s.id === playBtn.dataset.songId); if (indexToPlay !== -1) { if (JSON.stringify(currentPlaylist) !== JSON.stringify(bannerPlaylist)) { currentPlaylist = [...bannerPlaylist]; if (isShuffled) { isShuffled = false; updateShuffleIcon(); } } loadSong(indexToPlay); playAudio(); } } });
         playbackSpeedBtn.addEventListener('click', () => { currentRateIndex = (currentRateIndex + 1) % playbackRates.length; const newRate = playbackRates[currentRateIndex]; audioPlayer.playbackRate = newRate; playbackSpeedBtn.textContent = `${newRate}x`; playbackSpeedBtn.classList.toggle('active', newRate !== 1); saveToStorage('playbackRate', newRate); });
-        if (premiumButtons.length && premiumModal) premiumButtons.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); premiumModal.show(); }));
+        if (premiumButtons.length && premiumModal) premiumButtons.forEach(btn => btn.addEventListener('click', (e) => { e.preventDefault(); premiumModal.show(e.target); }));
         if (premiumToggleInput) premiumToggleInput.addEventListener('change', () => { const enabled = premiumToggleInput.checked; localStorage.setItem('isPremium', JSON.stringify(!!enabled)); showToast(enabled ? 'Premium activated' : 'Premium deactivated'); });
         window.addEventListener('keydown', (e) => { const activeTag = document.activeElement?.tagName || ''; if (activeTag === 'INPUT' || activeTag === 'TEXTAREA') return; switch (e.key.toLowerCase()) { case ' ': e.preventDefault(); togglePlay(); break; case 'k': togglePlay(); break; case 'j': prevSong(); break; case 'l': nextSong(); break; case 'm': toggleMute(); break; case 's': toggleShuffle(); break; case 'r': toggleRepeat(); break; case 'arrowleft': if (audioPlayer.duration) audioPlayer.currentTime = Math.max(0, audioPlayer.currentTime - 5); break; case 'arrowright': if (audioPlayer.duration) audioPlayer.currentTime = Math.min(audioPlayer.duration, audioPlayer.currentTime + 5); break; case 'f': toggleLike(); break; } });
+        
+        let modalTriggerElement = null;
+        document.addEventListener('show.bs.modal', function (event) {
+            modalTriggerElement = event.relatedTarget;
+        });
+        document.addEventListener('hidden.bs.modal', function () {
+            if (modalTriggerElement) {
+                modalTriggerElement.focus();
+                modalTriggerElement = null;
+            }
+        });
+        
+        // --- NEW CODE START ---
+        // --- FIX FOR PREMIUM MODAL FOCUS WARNING ---
+        // This specifically addresses the warning when closing the Premium modal.
+        // It manually moves focus off the close button just before hiding starts.
+        if (premiumModalEl) {
+            premiumModalEl.addEventListener('hide.bs.modal', () => {
+                // Focus the outer modal element to move focus away from any internal
+                // buttons (like the 'X') before it becomes hidden.
+                premiumModalEl.focus();
+            });
+        }
+        // --- NEW CODE END ---
     }
 
     // --- INITIALIZATION ---
